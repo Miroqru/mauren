@@ -37,9 +37,16 @@ class Mau:
     # LEADERBOARD
     # ===========
 
-    async def leaderboard(
+    async def rating(
         self, category: LeaderBoardGroups = LeaderBoardGroups.GEMS
     ) -> list[User]:
         """Таблица лидеров по категории."""
         res = await self._request(f"/leaderboard/{category}")
         return [User.validate(u) for u in res]
+
+    async def player_rating(
+        self, username: str, category: LeaderBoardGroups = LeaderBoardGroups.GEMS
+    ) -> int:
+        """Положение пользователя в таблице лидеров по категории."""
+        res = await self._request(f"/leaderboard/{username}/{category}")
+        return res
