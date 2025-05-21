@@ -3,6 +3,7 @@
 from aiohttp import ClientSession
 from aiohttp.client_exceptions import ContentTypeError
 from loguru import logger
+
 from mauren.enums import LeaderBoardGroups
 from mauren.exceptions import MauException, MauRequestError
 from mauren.types.user import (
@@ -37,7 +38,7 @@ class Mau:
         except ContentTypeError as e:
             raise MauException(f"Failed to parse: {e}") from e
 
-    # LEADERBOARD
+    # Leaderboard
     # ===========
 
     async def rating(
@@ -54,20 +55,13 @@ class Mau:
         res = await self._request(f"/leaderboard/{username}/{category}")
         return res
 
-    # USERS
+    # Users
     # =====
 
     async def users(self) -> list[User]:
         """Возвращает список пользователей."""
         res = await self._request("/users")
         return [User.validate(u) for u in res]
-
-    async def user_me(self, token: str) -> User:
-        """Возвращает актуальные данные пользователя."""
-        res = await self._request(
-            "/users/me", headers=[("Authorization", f"Bearer {token}")]
-        )
-        return User.validate(res)
 
     async def user(self, username: str) -> User:
         """Получает пользователя по username."""
@@ -77,6 +71,16 @@ class Mau:
     async def register_user(self, user: UserCredentials) -> User:
         """Регистрирует нового пользователя."""
         res = await self._request("/users", method="post", json=user.model_dump())
+        return User.validate(res)
+
+    # Authorized users
+    # ================
+
+    async def user_me(self, token: str) -> User:
+        """Возвращает актуальные данные пользователя."""
+        res = await self._request(
+            "/users/me", headers=[("Authorization", f"Bearer {token}")]
+        )
         return User.validate(res)
 
     async def login_user(self, user: UserCredentials) -> TokenResult:
