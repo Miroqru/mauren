@@ -1,8 +1,7 @@
 from datetime import datetime
 
+from mauren.types.user import User
 from pydantic import BaseModel
-
-from mau_client.types.user import User
 
 
 class Game(BaseModel):

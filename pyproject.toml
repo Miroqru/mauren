@@ -1,7 +1,7 @@
 [project]
-name = "mau-client"
-version = "0.1.0"
-description = " Сlient for interacting with the Mau server"
+name = "mauren"
+version = "0.3.0"
+description = "Client for interacting with the Mau server"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [

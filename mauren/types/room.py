@@ -1,10 +1,9 @@
 from datetime import datetime
 
+from mauren.enums import RoomState
+from mauren.types.game import Game
+from mauren.types.user import User
 from pydantic import BaseModel
-
-from mau_client.enums import RoomState
-from mau_client.types.game import Game
-from mau_client.types.user import User
 
 
 class Room(BaseModel):

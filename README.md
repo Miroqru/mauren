@@ -1,2 +1,5 @@
-# mau-client
-Сlient for interacting with the Mau server
+# Mauren
+
+Client for interacting with the Mau server.
+
+> More info soon ...

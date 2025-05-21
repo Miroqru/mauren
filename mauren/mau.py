@@ -3,10 +3,9 @@
 from aiohttp import ClientSession
 from aiohttp.client_exceptions import ContentTypeError
 from loguru import logger
-
-from mau_client.enums import LeaderBoardGroups
-from mau_client.exceptions import MauException, MauRequestError
-from mau_client.types.user import (
+from mauren.enums import LeaderBoardGroups
+from mauren.exceptions import MauException, MauRequestError
+from mauren.types.user import (
     TokenResult,
     User,
     UserChangePassword,
