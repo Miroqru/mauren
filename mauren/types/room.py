@@ -1,9 +1,10 @@
 from datetime import datetime
 
+from pydantic import BaseModel
+
 from mauren.enums import RoomState
 from mauren.types.game import Game
 from mauren.types.user import User
-from pydantic import BaseModel
 
 
 class Room(BaseModel):
@@ -30,3 +31,20 @@ class Room(BaseModel):
 
     # История игр комнаты
     games: list[Game]
+
+
+class RoomEdit(BaseModel):
+    """Данные о комнате, которые можно изменить."""
+
+    name: str | None = None
+    private: bool | None = None
+    room_password: str | None = None
+    gems: int | None = None
+    max_players: int | None = None
+    min_players: int | None = None
+
+
+class RoomDelete(BaseModel):
+    """Данные комнаты при удалении."""
+
+    room_id: str

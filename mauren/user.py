@@ -2,6 +2,7 @@
 
 from mauren.api import Mau
 from mauren.exceptions import MauException
+from mauren.types.room import Room, RoomDelete, RoomEdit
 from mauren.types.user import User, UserChangePassword, UserCredentials, UserEdit
 
 
@@ -21,6 +22,41 @@ class MauUser:
         if self._token is None:
             raise MauException("You need to login user before use API")
         return self._token
+
+    # Room
+    # ====
+
+    async def create_room(self) -> Room:
+        """Создаёт новую комнату."""
+        return await self.client.create_room(self._get_token())
+
+    async def room(self) -> Room:
+        """Возвращает активную комнату игрока."""
+        return await self.client.active_room(self._get_token())
+
+    async def edit_room(self, room: RoomEdit) -> Room:
+        """Изменяет данные комнаты."""
+        return await self.client.edit_room(self._get_token(), room)
+
+    async def delete_room(self, room_id: str) -> RoomDelete:
+        """Удаляет комнату по её ID."""
+        return await self.client.delete_room(self._get_token(), room_id)
+
+    async def join_room(self, room_id: str) -> Room:
+        """Удаляет комнату по её ID."""
+        return await self.client.join_room(self._get_token(), room_id)
+
+    async def leave_room(self, room_id: str) -> Room:
+        """Удаляет комнату по её ID."""
+        return await self.client.leave_room(self._get_token(), room_id)
+
+    async def room_kick(self, room_id: str, user_id: str) -> Room:
+        """Удаляет комнату по её ID."""
+        return await self.client.room_kick(self._get_token(), room_id, user_id)
+
+    async def room_owner(self, room_id: str, user_id: str) -> Room:
+        """Удаляет комнату по её ID."""
+        return await self.client.room_owner(self._get_token(), room_id, user_id)
 
     # User
     # ====
