@@ -1,11 +1,10 @@
 """Игровой контекст."""
 
-from pydantic import BaseModel
+from .base import MauObject
+from .game import CurrentPlayer, Game
 
-from mauren.types.game import CurrentPlayer, Game
 
-
-class GameContext(BaseModel):
+class GameContext(MauObject):
     """Игровой контекст."""
 
     game: Game
