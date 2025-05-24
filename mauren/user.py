@@ -2,6 +2,8 @@
 
 from mauren.api import Mau
 from mauren.exceptions import MauException
+from mauren.types.context import GameContext
+from mauren.types.game import CardColor
 from mauren.types.room import Room, RoomDelete, RoomEdit
 from mauren.types.user import User, UserChangePassword, UserCredentials, UserEdit
 
@@ -22,6 +24,65 @@ class MauUser:
         if self._token is None:
             raise MauException("You need to login user before use API")
         return self._token
+
+    # Game
+    # ====
+
+    async def join_game(self) -> GameContext:
+        """Добавляет пользователя в игру."""
+        return await self.client.join_game(self._get_token())
+
+    async def leave_game(self) -> GameContext:
+        """Покинуть игру."""
+        return await self.client.leave_game(self._get_token())
+
+    async def active_game(self) -> GameContext:
+        """Возвращает актуальный игровой контекст."""
+        return await self.client.active_game(self._get_token())
+
+    async def start_game(self) -> GameContext:
+        """Начинает игру в комнате."""
+        return await self.client.start_game(self._get_token())
+
+    async def end_game(self) -> GameContext:
+        """Принудительно завершает игру в комнате."""
+        return await self.client.end_game(self._get_token())
+
+    async def game_kick(self, user_id: str) -> GameContext:
+        """Выгоняет игрока из игры."""
+        return await self.client.game_kick(self._get_token(), user_id)
+
+    async def game_skip(self) -> GameContext:
+        """Пропускает текущего игрока в игре."""
+        return await self.client.game_skip(self._get_token())
+
+    async def game_next(self) -> GameContext:
+        """Передаёт ход следующему игроку."""
+        return await self.client.game_next(self._get_token())
+
+    async def game_take(self) -> GameContext:
+        """Берёт карты."""
+        return await self.client.game_take(self._get_token())
+
+    async def game_shotgun_take(self) -> GameContext:
+        """Берёт карты вместо выстрела из револьвера."""
+        return await self.client.game_shotgun_take(self._get_token())
+
+    async def game_shotgun_shot(self, taken: str) -> GameContext:
+        """Выстреливает из револьвера вместо взятия карт."""
+        return await self.client.game_shotgun_shot(self._get_token())
+
+    async def game_bluff(self) -> GameContext:
+        """Проверяет прошлого игрока на честность."""
+        return await self.client.game_bluff(self._get_token())
+
+    async def game_color(self, color: CardColor) -> GameContext:
+        """Выбирает цвет для карты."""
+        return await self.client.game_color(self._get_token(), color)
+
+    async def game_player(self, user_id: str) -> GameContext:
+        """Выбирает игрока для обмена картами."""
+        return await self.client.game_player(self._get_token(), user_id)
 
     # Room
     # ====

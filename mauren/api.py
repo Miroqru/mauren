@@ -6,6 +6,8 @@ from loguru import logger
 
 from mauren.enums import LeaderBoardGroups
 from mauren.exceptions import MauException, MauRequestError
+from mauren.types.context import GameContext
+from mauren.types.game import CardColor
 from mauren.types.room import Room, RoomDelete, RoomEdit
 from mauren.types.user import (
     TokenResult,
@@ -38,6 +40,120 @@ class Mau:
                 raise MauRequestError(r.status, await r.text())
         except ContentTypeError as e:
             raise MauException(f"Failed to parse: {e}") from e
+
+    # Game
+    # ====
+
+    async def join_game(self, token: str) -> GameContext:
+        """Добавляет пользователя в игру."""
+        res = await self._request(
+            "/game/join", method="post", headers=[("Authorization", f"Bearer {token}")]
+        )
+        return GameContext.validate(res)
+
+    async def leave_game(self, token: str) -> GameContext:
+        """Покинуть игру."""
+        res = await self._request(
+            "/game/leave", method="post", headers=[("Authorization", f"Bearer {token}")]
+        )
+        return GameContext.validate(res)
+
+    async def active_game(self, token: str) -> GameContext:
+        """Возвращает актуальный игровой контекст."""
+        res = await self._request(
+            "/game/", headers=[("Authorization", f"Bearer {token}")]
+        )
+        return GameContext.validate(res)
+
+    async def start_game(self, token: str) -> GameContext:
+        """Начинает игру в комнате."""
+        res = await self._request(
+            "/game/start", method="post", headers=[("Authorization", f"Bearer {token}")]
+        )
+        return GameContext.validate(res)
+
+    async def end_game(self, token: str) -> GameContext:
+        """Принудительно завершает игру в комнате."""
+        res = await self._request(
+            "/game/end", method="post", headers=[("Authorization", f"Bearer {token}")]
+        )
+        return GameContext.validate(res)
+
+    # Game actions
+    # ============
+
+    async def game_kick(self, token: str, user_id: str) -> GameContext:
+        """Выгоняет игрока из игры."""
+        res = await self._request(
+            f"/game/kick/{user_id}",
+            method="post",
+            headers=[("Authorization", f"Bearer {token}")],
+        )
+        return GameContext.validate(res)
+
+    async def game_skip(self, token: str) -> GameContext:
+        """Пропускает текущего игрока в игре."""
+        res = await self._request(
+            "/game/skip", method="post", headers=[("Authorization", f"Bearer {token}")]
+        )
+        return GameContext.validate(res)
+
+    async def game_next(self, token: str) -> GameContext:
+        """Передаёт ход следующему игроку."""
+        res = await self._request(
+            "/game/next", method="post", headers=[("Authorization", f"Bearer {token}")]
+        )
+        return GameContext.validate(res)
+
+    async def game_take(self, token: str) -> GameContext:
+        """Берёт карты."""
+        res = await self._request(
+            "/game/tale", method="post", headers=[("Authorization", f"Bearer {token}")]
+        )
+        return GameContext.validate(res)
+
+    async def game_shotgun_take(self, token: str) -> GameContext:
+        """Берёт карты вместо выстрела из револьвера."""
+        res = await self._request(
+            "/game/shotgun/take",
+            method="post",
+            headers=[("Authorization", f"Bearer {token}")],
+        )
+        return GameContext.validate(res)
+
+    async def game_shotgun_shot(self, token: str) -> GameContext:
+        """Выстреливает из револьвера вместо взятия карт."""
+        res = await self._request(
+            "/game/shotgun/shot",
+            method="post",
+            headers=[("Authorization", f"Bearer {token}")],
+        )
+        return GameContext.validate(res)
+
+    async def game_bluff(self, token: str) -> GameContext:
+        """Проверяет прошлого игрока на честность."""
+        res = await self._request(
+            "/game/bluff", method="post", headers=[("Authorization", f"Bearer {token}")]
+        )
+        return GameContext.validate(res)
+
+    async def game_color(self, token: str, color: CardColor) -> GameContext:
+        """Выбирает цвет для карты."""
+        res = await self._request(
+            f"/game/color/{color.value}",
+            method="post",
+            headers=[("Authorization", f"Bearer {token}")],
+        )
+        return GameContext.validate(res)
+
+    async def game_player(self, token: str, user_id: str) -> GameContext:
+        """Выбирает игрока для обмена картами."""
+        res = await self._request(
+            f"/game/player/{user_id}",
+            method="post",
+            headers=[("Authorization", f"Bearer {token}")],
+        )
+        return GameContext.validate(res)
 
     # Get rooms
     # =========
